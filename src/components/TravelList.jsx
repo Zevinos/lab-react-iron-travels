@@ -1,53 +1,59 @@
-import React, { useState } from "react";
-import travelPlansData from "/src/assets/travel-plans.json";
-import "/src/styles/TravelList.css";
+import { useState } from "react";
+import styles from "../styles/travelList.module.css";
 
-function TravelList() {
-  const [travelPlans, setTravelPlans] = useState(travelPlansData);
+function TravelList({ travelPlansData }) {
+  const [plans, setPlans] = useState(travelPlansData);
+  const deletPlan = (planId) => {
+    const filteredPlans = plans.filter((plan) => {
+      return plan.id !== planId;
+    });
+
+    setPlans(filteredPlans);
+  };
+
   return (
-    <div>
-      {travelPlans.map((onePlan) => (
-        <li key={onePlan.id} className="travel-onePlan-item">
-          <img src={onePlan.image} alt={onePlan.destination} />
-          <div className="textPart">
-            <h3>
-              {onePlan.destination} {`(${onePlan.days} Days)`}
-            </h3>
-            <p>{onePlan.description}</p>
-            <p>
-              <span className="bold-text">Price:</span> ${onePlan.totalCost}
-            </p>
-            {renderLabels(onePlan)}
+    <div className={styles.list}>
+      {plans.map((onePlan) => {
+        return (
+          <div className={styles.card} key={onePlan.id}>
+            <img className={styles.img} src={onePlan.image} />
+            <div className={styles.text}>
+              <h3>
+                {onePlan.destination}, ({onePlan.days} days)
+              </h3>
+              <p>{onePlan.description}</p>
+              <p>
+                <b>Price:</b> {onePlan.totalCost} €
+              </p>
+              <div className={styles.labels}>
+                {onePlan.totalCost <= 350 && (
+                  <div className={styles.labelGreen}>
+                    <p>Great Deal</p>
+                  </div>
+                )}
+                {onePlan.totalCost >= 1500 && (
+                  <div className={styles.labelBlue}>
+                    <p>Premium</p>
+                  </div>
+                )}
+                {onePlan.allInclusive && (
+                  <div className={styles.labelBlue}>
+                    <p>All-Inclusive</p>
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={() => deletPlan(onePlan.id)}
+                className={styles.btnDelete}
+              >
+                Delete
+              </button>
+            </div>
           </div>
-        </li>
-      ))}
+        );
+      })}
     </div>
   );
-}
-
-function renderLabels(onePlan) {
-  const labels = [];
-
-  if (onePlan.totalCost <= 350) {
-    labels.push(
-      <span key="great-deal" className="label great-deal">
-        Great Deal
-      </span>
-    );
-  }
-
-  if (onePlan.totalCost >= 1500) {
-    labels.push(
-      <div key="premium-all-inclusive" className="label-container">
-        <span className="label premium">Premium</span>
-        {onePlan.allInclusive && (
-          <span className="label all-inclusive">All Inclusive</span>
-        )}
-      </div>
-    );
-  }
-
-  return labels;
 }
 
 export default TravelList;

@@ -1,6 +1,8 @@
 import logo from "./assets/logo.png";
 import "./App.css";
-import TravelList from "./components/TravelList";
+import TravelList from './components/TravelList.jsx';
+import travelPlansData from "./assets/travel-plans.json";
+
 function App() {
   return (
     <>
@@ -10,8 +12,8 @@ function App() {
       <h1 className="text-iron">Iron Travels</h1>
       <h3 className="text-iron">Tailored Travel Plans for Ironhackers</h3>
 
-      {/* RENDER YOUR LIST COMPONENT HERE */}
-      <TravelList></TravelList>
+      <TravelList travelPlansData={travelPlansData}/>
+      
     </>
   );
 }
